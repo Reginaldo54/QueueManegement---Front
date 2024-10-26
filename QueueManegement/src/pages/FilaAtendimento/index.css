@@ -1,0 +1,36 @@
+.fila-container {
+    padding: 20px;
+  }
+  
+  .paciente-destaque {
+    background-color: #d1ffd1;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+  
+  .btn-proximo-paciente {
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-proximo-paciente:hover {
+    background-color: #218838;
+  }
+  
+  .patient-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .patient-table th, .patient-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
