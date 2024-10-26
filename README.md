@@ -3,7 +3,7 @@ Front do projeto QueueManegement
 
 # Passo a passo para inicilizar o projeto.
 
-**No terminal**
+**== No terminal ==**
 
 
 **Caso não estiver na pasta QueueManagement, utilize:**
