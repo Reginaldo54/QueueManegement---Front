@@ -470,7 +470,7 @@ export default function FormSignUp() {
 
 
         <div className="formButton">
-          <button type="submit" className="butao" onClick={() => navigate("/")}>Agendar</button>
+          <button type="submit" className="butao" onClick={() => {navigate("/"); alert("Página Ainda Não Desenvolvida!");}}>Agendar</button>
         </div>
       </form>
     </div>

@@ -188,7 +188,7 @@ export default function FormSignUpFunc() {
           </div>
 
           <div className="formButton">
-            <button type="submit" className="butao" onClick={() => navigate("/")}>Cadastrar</button>
+            <button type="submit" className="butao" onClick={() => {navigate("/"); alert("Página Ainda Não Desenvolvida!");}}>Cadastrar</button>
           </div>
         </div>
       </form>

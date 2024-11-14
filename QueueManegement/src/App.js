@@ -9,7 +9,7 @@ import UserAdmin from './components/userAdmin';
 import logo from './logo.svg';
 import TodasTelas from './pages/TodasTelas';
 import FormSignUp from "./components/formSignUp";
-
+import "./App.css"
 
 //<Home/>
 //<TodasTelas/>

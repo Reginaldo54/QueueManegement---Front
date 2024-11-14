@@ -16,6 +16,7 @@ export default function AcessarConsulta()
     return(
         <div>
             <Header/>
+            <div id='centralizaFormConsulta'>
             <form id="acessarConsulta">
                 <div className="formButton">
                    <h2>Acessar Consulta</h2>
@@ -34,11 +35,13 @@ export default function AcessarConsulta()
                 </div>
 
                 <div className="formButton">
-                    <button type="submit" className="butao" onClick={() => navigate("/")}>Acessar</button>
+                    <button type="submit" className="butao" onClick={() => {navigate("/"); alert("Página Ainda Não Desenvolvida!");}}>Acessar</button>
                 </div>
 
             </form>
         </div>
+        </div>
+       
         
     );
 }

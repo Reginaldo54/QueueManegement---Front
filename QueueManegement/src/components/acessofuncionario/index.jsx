@@ -295,8 +295,9 @@ export default function AcessoFuncionario() {
     <div>
       <Header/>
       <form onSubmit={handleSubmit}>
-       <div className="formButton">
-          <button type="submit" className="butao">Verificar Fila</button>
+
+        <div className="formButton">
+          <button className="butao">Verificar Fila</button>
         </div>
 
         <div className="formButton">
@@ -474,7 +475,7 @@ export default function AcessoFuncionario() {
 
 
         <div className="formButton">
-          <button type="submit" className="butao" onClick={() => navigate("/")}>Agendar</button>
+          <button type="submit" className="butao" onClick={() => {navigate("/"); alert("Página Ainda Não Desenvolvida!");}}>Agendar</button>
         </div>
       </form>
     </div>

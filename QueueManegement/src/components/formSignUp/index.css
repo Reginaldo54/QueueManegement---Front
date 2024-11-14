@@ -5,6 +5,8 @@ body {
     color: #333; /* Cor de texto escura para melhor legibilidade */
     margin: 0;
     padding: 20px; 
+    overflow-x: hidden;
+    
   }
   
   /* Estilo do formulário */

@@ -9,17 +9,19 @@ export default function Home()
     return(
         <div>
              <Header/>
-             <form>
-           
-                <div id="homeContainer">
-                    <h2>O que Deseja?</h2>
-                    <div id="butoes">
-                        <button className="butao" onClick={() => navigate("/FormSignUp")}>Agendar</button>
-                        <button className="butao" onClick={() => navigate("/AcessarConsulta")}>Acessar Consulta</button>
-                        <button className="butao" onClick={() => navigate("/Login")}>Login</button>
+             <div id="centralizaFormHome">
+                <form>
+                    
+                    <div id="homeContainer">
+                        <h2>O que Deseja?</h2>
+                        <div id="butoes">
+                            <button className="butao" onClick={() => navigate("/FormSignUp")}>Agendar</button>
+                            <button className="butao" onClick={() => navigate("/AcessarConsulta")}>Acessar Consulta</button>
+                            <button className="butao" onClick={() => navigate("/Login")}>Login</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+             </div>
         </div>
        
         

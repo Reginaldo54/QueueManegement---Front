@@ -9,15 +9,18 @@ export default function UserAdmin()
     return(
         <div>
             <Header/>
-            <form id="adminContainer">
-                <h2>O que Deseja?</h2>
-                <div id="butoes">
-                    <button className="butao" onClick={() => navigate("/FormSignUpFunc")}>Cadastrar Funcionário</button>
-                    <button className="butao" onClick={() => navigate("/")}>Verificar Fila</button>
-                    <button className="butao" onClick={() => navigate("/")}>Sair</button>
-                </div>
+            <div id="centralizaFormAdmin">
+                <form id="adminContainer">
+                    <h2>O que Deseja?</h2>
+                    <div id="butoes">
+                        <button className="butao" onClick={() => navigate("/FormSignUpFunc")}>Cadastrar Funcionário</button>
+                        <button className="butao" onClick={() => {navigate("/"); alert("Página Ainda Não Desenvolvida!");}}>Verificar Fila</button>
+                        <button className="butao" onClick={() => {navigate("/"); }}>Sair</button>
+                    </div>
+            
+                </form>
+            </div>
            
-            </form>
         </div>
        
     );

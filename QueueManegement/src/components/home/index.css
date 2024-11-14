@@ -32,3 +32,8 @@
     background-color: #a6f85ecb;
 
 }
+
+#centralizaFormHome
+{
+  transform: translateY(15%);
+}
