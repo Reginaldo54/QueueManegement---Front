@@ -1,0 +1,34 @@
+
+#homeContainer
+{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+#homeContainer h2
+{
+    margin-bottom: 45px;
+}
+
+#homeContainer #butoes
+{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#homeContainer #butoes .butao{
+    background-color: #a6f85e75;
+    color: #505050;
+    border-radius: 20px;
+}
+
+#homeContainer #butoes .butao:hover
+{
+    background-color: #a6f85ecb;
+
+}

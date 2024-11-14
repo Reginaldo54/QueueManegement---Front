@@ -4,7 +4,7 @@ import axios from "axios";
 import Header from "../header";
 import { useNavigate } from "react-router-dom";
 
-export default function FormSignUp() {
+export default function AcessoFuncionario() {
   const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState({
@@ -295,6 +295,10 @@ export default function FormSignUp() {
     <div>
       <Header/>
       <form onSubmit={handleSubmit}>
+       <div className="formButton">
+          <button type="submit" className="butao">Verificar Fila</button>
+        </div>
+
         <div className="formButton">
           <h2>Agendamento</h2>
         </div>

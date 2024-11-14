@@ -29,7 +29,7 @@ export default function FilaDeAtendimento() {
     if (pacientes.length > 0) {
       try {
         // Chama o endpoint para atender o próximo paciente
-        const response = await axios.get("http://localhost:8080/fila/chamar");
+        const response = await axios.get("http://localhost:8080/chamarPaciente");
 
         // O paciente em destaque é o que foi retornado pelo servidor
         setPacienteDestaque(response.data);

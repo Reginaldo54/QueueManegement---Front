@@ -1,7 +1,7 @@
 /* Define a fonte padrão e as cores principais */
 body {
     font-family: Arial, sans-serif; /* Fonte simples e legível */
-    background-color: #5ef8e628; /* Fundo claro para um visual clean */
+    background-color: #f9f9f9; /* Fundo claro para um visual clean */
     color: #333; /* Cor de texto escura para melhor legibilidade */
     margin: 0;
     padding: 20px; 
@@ -67,7 +67,6 @@ body {
   /* Estilo dos inputs e selects */
   input[type="text"],
   input[type="email"],
-  input[type="password"],
   input[type="tel"],
   input[type="date"],
   select {
@@ -88,3 +87,13 @@ body {
     margin-top: 5px; /* Espaço acima da mensagem de erro */
   }
   
+.formButton h2
+{
+  margin-bottom: 35px;
+}
+
+.formButton .butao
+{
+  margin-top: 35px;
+  margin-bottom: 35px;
+}
