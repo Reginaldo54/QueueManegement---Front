@@ -15,7 +15,7 @@ export default function Home()
                     <div id="homeContainer">
                         <h2>O que Deseja?</h2>
                         <div id="butoes">
-                            <button className="butao" onClick={() => navigate("/FormSignUp")}>Agendar</button>
+                            <button className="butao" onClick={() => navigate("/FormSignUp")}>Cadastro</button>
                             <button className="butao" onClick={() => navigate("/AcessarConsulta")}>Acessar Consulta</button>
                             <button className="butao" onClick={() => navigate("/Login")}>Login</button>
                         </div>

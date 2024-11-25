@@ -14,8 +14,10 @@ export default function UserAdmin()
                     <h2>O que Deseja?</h2>
                     <div id="butoes">
                         <button className="butao" onClick={() => navigate("/FormSignUpFunc")}>Cadastrar Funcionário</button>
-                        <button className="butao" onClick={() => {navigate("/"); alert("Página Ainda Não Desenvolvida!");}}>Verificar Fila</button>
-                        <button className="butao" onClick={() => {navigate("/"); }}>Sair</button>
+                        <button className="butao" onClick={() => navigate("/FormSignUpMed")}>Cadastrar Médico</button>
+                        <button className="butao" onClick={() => {navigate("/Fila");}}>Verificar Fila</button>
+                        <button className="butao" onClick={() => {navigate("/login"); }}>Sair</button>
+        
                     </div>
             
                 </form>
@@ -25,3 +27,4 @@ export default function UserAdmin()
        
     );
 } 
+

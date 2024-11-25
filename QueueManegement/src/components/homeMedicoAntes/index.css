@@ -33,6 +33,30 @@ body {
     width: 48%;
 
   }
+  .fieldDuploSimples
+  {
+    display: flex;
+    justify-content: space-between;
+    
+  }
+  .formExtra
+  {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .formExtra #totalPacientes
+  {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .fieldDuploSimples .field
+  {
+    width: 48%;
+  }
+
   /* Estilo dos campos do formulário */
   .field {
     margin-bottom: 15px; /* Espaçamento entre os campos */
@@ -44,29 +68,44 @@ body {
     margin-bottom: 5px; /* Espaço abaixo do rótulo */
     font-weight: bold; /* Rótulos em negrito */
   }
-  
-  .formButton
-  {
-    display: flex;
-    justify-self: center;
-  }
+
   
   .butao{
     margin-top: 15px;
-    margin-bottom: 15px;
     background-color: #a6f85e75;
     color: #505050;
     border-radius: 20px;
-    width: 205px;
+    width: 134px;
     height: 44px;
-    cursor: pointer;
+    font-size: 16px;
     transition: .2s ease-in;
+    
   }
 
   .butao:hover
   {
-      background-color: #a6f85ecb;
-      transition: .2s ease-out;
+    transition: .13s ease-out;
+    background-color: #97e15675;
+  }
+
+  .butao:disabled
+  {
+    transition: .4s ease-in;
+    background-color: #a6f85e3a;;
+  }
+
+  .atendimento
+  {
+    margin-left: 21%;
+    margin-top: 15px;
+  }
+
+  .buttons
+  {
+    display: flex;
+    justify-content: center;
+    gap: 15%;
+    margin-bottom: 15px;
   }
 
   select{
@@ -80,6 +119,8 @@ body {
   input[type="password"],
   input[type="tel"],
   input[type="date"],
+  input[type="time"],
+  textarea,
   select {
     width: 100%; /* Largura total do campo */
     padding: 10px; /* Espaçamento interno */
@@ -90,6 +131,9 @@ body {
     color: #505050;
   }
   
+  textarea {
+    height: 111px;
+  }
   
   /* Estilo das mensagens de erro */
   .error {

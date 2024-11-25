@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import AcessarConsulta from './components/acessarConsulta';
 import AcessoFuncionario from './components/acessofuncionario';
 import FormSignUpFunc from './components/formSignUpFunc';
 import Header from './components/header';
@@ -10,6 +9,11 @@ import logo from './logo.svg';
 import TodasTelas from './pages/TodasTelas';
 import FormSignUp from "./components/formSignUp";
 import "./App.css"
+import HomeMedico from "./components/homeMedico";
+import Fila from "./components/fila";
+import FilaAtendimento from "./teste/fila_atendimento";
+import HomePaciente from "./components/homePaciente";
+import FormSignUpMed from "./components/FormSignUpMed";
 
 //<Home/>
 //<TodasTelas/>
@@ -18,19 +22,22 @@ import "./App.css"
 //<UserAdmin/>
 //<FormSignUpFunc/>
 //<AcessoFuncionario/>
+
 function App() {
   return (
-    
     <Router>
       <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/AcessarConsulta" element={<AcessarConsulta/>} />
+        <Route path="/" element={<Home/>} /> 
+        <Route path="/AcessarConsulta" element={<FilaAtendimento/>} /> 
+        <Route path="/Fila" element={<Fila/>} />
+        <Route path="/HomeMedico" element={<HomeMedico/>} />
+        <Route path="/HomePaciente" element={<HomePaciente/>} />
         <Route path="/Login" element={<Login/>} />
-        <Route path="/Admin" element={<UserAdmin/>} />
+        <Route path="/HomeAdmin" element={<UserAdmin/>} />
         <Route path="/FormSignUp" element={<FormSignUp/>} />
         <Route path="/FormSignUpFunc" element={<FormSignUpFunc/>} />
-        <Route path="/Funcionario" element={<AcessoFuncionario/>} />
-        <Route path="/AcessarConsulta" element={<AcessarConsulta/>} />
+        <Route path="/FormSignUpMed" element={<FormSignUpMed/>} />
+        <Route path="/HomeFuncionario" element={<AcessoFuncionario/>} />
       </Routes>
     </Router>
   );

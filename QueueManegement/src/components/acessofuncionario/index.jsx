@@ -297,11 +297,11 @@ export default function AcessoFuncionario() {
       <form onSubmit={handleSubmit}>
 
         <div className="formButton">
-          <button className="butao">Verificar Fila</button>
+          <button className="butao" onClick={() => {navigate("/Fila");}}>Verificar Fila</button>
         </div>
 
         <div className="formButton">
-          <h2>Agendamento</h2>
+          <h2>Agendamento de Pacientes</h2>
         </div>
         <div id="campos">
           <div className="field">

@@ -16,18 +16,50 @@ export default function Login() {
         setEmail(event.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // Verifique o tipo de usuário com base nas credenciais inseridas
-        if (email === "admin" && senha === "admin") {
-            navigate("/admin");
-        } else if (email === "funcionario" && senha === "funcionario") {
-            navigate("/funcionario");
-        } else if (email === "medico" && senha === "medico") {
-            navigate("/medico");
-        } else {
-            alert("Credenciais inválidas");
+
+        try {
+            // Envia uma requisição GET para o endpoint de login com os parâmetros emailOrCpf e password
+            const response = await fetch(`http://localhost:8080/fila/login?emailOrCpf=${email}&password=${senha}`);
+
+            if (!response.ok) {
+                // Caso a resposta não seja bem-sucedida (erro 401 ou outro)
+                throw new Error("Credenciais inválidas");
+            }
+
+            const data = await response.json();
+            
+            
+
+            // Verifica se a resposta contém a role
+            if (data.role) {
+                // Dependendo da role retornada, redireciona para a página apropriada
+                if (data.role === "ADMIN") {
+                  //  navigate("/homeadmin");
+                  console.log("Deu certo: " + JSON.stringify(data));
+                } else if (data.role === "FUNCIONARIO") {
+                    navigate("/homefuncionario");
+                } else if (data.role === "ESPECIALISTA") {
+                    // Se for especialista, pode redirecionar para a página do especialista
+                   // navigate(`/homemedico/${data.idEspecialista}`);
+                   console.log("Deu certo: " + JSON.stringify(data));
+                }if (data.role === "PACIENTE") {
+                    // Se for especialista, pode redirecionar para a página do especialista
+                    //navigate(`/${data.idEspecialista}`);
+                    console.log("Deu certo: " + JSON.stringify(data));
+                    
+                        // Navega para a homePaciente passando a senha no estado
+                        navigate("/homePaciente", { state: { senha } });
+                }
+            } else {
+                // Se a role não for encontrada, mostramos um alerta com o erro
+                alert("Erro: Não foi possível determinar o tipo de usuário.");
+            }
+
+        } catch (error) {
+            // Exibe a mensagem de erro caso a autenticação falhe
+            alert(error.message);
         }
     };
 
@@ -35,24 +67,6 @@ export default function Login() {
         <div>
             <Header />
             <div id="loginContainer">
-                <div id="centralizando">
-                    <h2>Logins disponiveis para teste</h2>
-                    <div id="acessosLogin">
-                        <div className="acesso">
-                            <h3>Admin</h3>
-                            <span>Login: admin</span> <br/>
-                            <span>Senha: admin</span>
-                        </div>
-
-                        <div className="acesso">
-                            <h3>Funcionário</h3>
-                            <span>Login: funcionario</span><br/>
-                            <span>Senha: funcionario</span>
-                        </div>
-                    </div>
-                </div>
-           
-
                 <form id="login" onSubmit={handleSubmit}>
                     <h2>Login</h2>
 
@@ -86,9 +100,7 @@ export default function Login() {
                         <button type="submit" className="butao">Login</button>
                     </div>
                 </form>
-                
             </div>
-          
         </div>
     );
 }

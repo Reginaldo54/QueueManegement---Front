@@ -1,24 +1,4 @@
-/* Define a fonte padrão e as cores principais */
-body {
-    font-family: Arial, sans-serif; /* Fonte simples e legível */
-    background-color: #5ef8e628; /* Fundo claro para um visual clean */
-    color: #333; /* Cor de texto escura para melhor legibilidade */
-    margin: 0;
-    padding: 20px; 
-    overflow-x: hidden;
-    
-  }
-  
-  /* Estilo do formulário */
-  form {
-    background-color: #ffffff; /* Fundo branco para o formulário */
-    border-radius: 8px; /* Bordas arredondadas */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    padding: 20px; /* Espaçamento interno */
-    max-width: 600px; /* Largura máxima do formulário */
-    margin: auto; /* Centraliza o formulário na página */
-  }
-  
+
   #campoEspecial
   {
     display: flex;
@@ -59,14 +39,6 @@ body {
     border-radius: 20px;
     width: 205px;
     height: 44px;
-    cursor: pointer;
-    transition: .2s ease-in;
-  }
-
-  .butao:hover
-  {
-      background-color: #a6f85ecb;
-      transition: .2s ease-out;
   }
 
   select{
@@ -77,7 +49,6 @@ body {
   /* Estilo dos inputs e selects */
   input[type="text"],
   input[type="email"],
-  input[type="password"],
   input[type="tel"],
   input[type="date"],
   select {
@@ -98,3 +69,13 @@ body {
     margin-top: 5px; /* Espaço acima da mensagem de erro */
   }
   
+.formButton h2
+{
+  margin-bottom: 35px;
+}
+
+.formButton .butao
+{
+  margin-top: 35px;
+  margin-bottom: 35px;
+}
