@@ -4,7 +4,7 @@ import "./index.css"; // Certifique-se de ter o estilo adequado
 import { useLocation } from "react-router-dom";
 
 export default function HomePaciente() {
-  const location = useLocation();
+  const location = useLocation(); 
   const { senha } = location.state || {}; // Recupera a senha passada pela tela de login
   const [pacientes, setPacientes] = useState([]); // Inicializa o estado pacientes como um array vazio
   const [telaAtual, setTelaAtual] = useState("listaAgendamentos");
@@ -19,7 +19,11 @@ export default function HomePaciente() {
   const [pacienteAtual, setPacienteAtual] = useState(null);
   const [tempoRestante, setTempoRestante] = useState(90);
 
-  const hoje = new Date().toISOString().split("T")[0]; // Data atual no formato "YYYY-MM-DD"
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0); // Ajusta a data para 00:00:00
+  const hojeFormatado = hoje.toISOString().split("T")[0]; // Formata no padrão "YYYY-MM-DD"
+  // Data atual no formato "YYYY-MM-DD"
+   // Ajustar a data para sempre mostrar o dia atual às 00:00:00
 
   // UseEffect para buscar os agendamentos assim que a tela for carregada
   useEffect(() => {
@@ -60,7 +64,7 @@ export default function HomePaciente() {
           if (agendamentos.length === 0) {
             agendamentos = [
               {
-                id: 4,
+                id: 5,
                 nomePaciente: "João Silva",
                 nomeEspecialista: "Rogério",
                 dataAgendamento: "2024-11-24",
@@ -68,7 +72,7 @@ export default function HomePaciente() {
                 status: "AGUARDANDO_CONFIRMACAO",
               },
               {
-                id: 4,
+                id: 6,
                 nomePaciente: "Maria Santos",
                 nomeEspecialista: "Ronaldo",
                 dataAgendamento: "2024-11-25",
@@ -90,7 +94,7 @@ export default function HomePaciente() {
   }, [senha]); // O efeito será acionado quando a senha for alterada ou quando a tela for carregada
 
   const handleConfirmar = (paciente) => {
-    if (paciente.dataAgendamento !== hoje) {
+    if (paciente.dataAgendamento !== hojeFormatado) {
       alert("Somente agendamentos com a data de hoje podem ser confirmados.");
       return;
     }

@@ -55,7 +55,6 @@ export default function FormSignUp() {
         datas: gerarDatasDisponiveis(medico.indisponibilidades),
       }));
       setTodosMedicos(dadosMedicos);
-      console.log(response.data);
     } catch (error) {
       console.error("Erro ao buscar médicos", error);
     }
@@ -70,13 +69,18 @@ export default function FormSignUp() {
   const gerarCalendario = () => {
     const datas = [];
     let dataAtual = new Date();
-    const dataFinal = new Date();
+    
+    // Ajustar a data para sempre mostrar o dia atual às 00:00:00
+    dataAtual.setHours(0, 0, 0, 0);
+    
+    const dataFinal = new Date(dataAtual);
     dataFinal.setDate(dataAtual.getDate() + 7);
-
+  
     while (dataAtual <= dataFinal) {
       datas.push(dataAtual.toISOString().split("T")[0]);
       dataAtual.setDate(dataAtual.getDate() + 1);
     }
+  
     return datas;
   };
 

@@ -43,10 +43,12 @@ export default function Login() {
                 } else if (data.role === "ESPECIALISTA") {
                     // Se for especialista, pode redirecionar para a página do especialista
                    // navigate(`/homemedico/${data.idEspecialista}`);
-                   console.log("Deu certo: " + JSON.stringify(data));
+                   let idEspecialista = data.idEspecialista;
+                   navigate("/homeMedico", { state: {idEspecialista} });
                 }if (data.role === "PACIENTE") {
                     // Se for especialista, pode redirecionar para a página do especialista
                     //navigate(`/${data.idEspecialista}`);
+                    
                     console.log("Deu certo: " + JSON.stringify(data));
                     
                         // Navega para a homePaciente passando a senha no estado

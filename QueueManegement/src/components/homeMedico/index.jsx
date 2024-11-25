@@ -2,19 +2,23 @@ import "./index.css";
 import React, { useState, useEffect } from "react";
 import Header from "../header";
 import axios from "axios"; // Usaremos axios para a requisição à API
+import { useLocation } from "react-router-dom";
 
 export default function HomeMedico() {
+  const location = useLocation();
+  const { idEspecialista } = location.state || {}; 
   const nomeUser = "Dr. João Oliveira"; // Nome do médico logado
   const [pacientes, setPacientes] = useState([]); // Lista de pacientes
   const [pacientesAtendidos, setPacientesAtendidos] = useState([]); // Lista de pacientes atendidos
   const [formValues, setFormValues] = useState({}); // Dados do paciente no formulário
   const [formVisible, setFormVisible] = useState(false); // Controle de visibilidade do formulário
   const [totalPacientes, setTotalPacientes] = useState(0); // Total de pacientes
-  const idEspecialista = "6"; // Exemplo de ID do especialista (geralmente virá do login)
-
+  
   // Função para obter o total de pacientes
   const getTotalPacientes = async () => {
     try {
+      console.log(idEspecialista);
+      
       const response = await axios.get(`http://localhost:8080/fila/contagemEspecialista/${idEspecialista}`);
       setTotalPacientes(response.data.QuantidadePacientesEmEspera); // Atualizando o total de pacientes
     } catch (error) {
