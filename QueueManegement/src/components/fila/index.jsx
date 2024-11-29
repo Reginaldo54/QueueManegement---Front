@@ -29,8 +29,8 @@ export default function HomeMedico() {
 
       // Armazenar o cliente Stomp para envio de mensagens
       setStompClient(stompClientInstance);
+      
     });
-
     // Cleanup: desconectar ao desmontar o componente
     return () => {
       if (stompClientInstance) {
@@ -44,7 +44,6 @@ export default function HomeMedico() {
   // Conectar ao WebSocket quando o componente for montado
   useEffect(() => {
     websocketChamarPacienteConection();
-    handleBuscarPaciente();
     return () => {
       if (stompClient) {
         stompClient.disconnect();
@@ -53,7 +52,8 @@ export default function HomeMedico() {
   }, []); // Conexão única ao montar o componente
 
   // Função para solicitar o primeiro paciente com o ID atual do especialista
-  const handleBuscarPaciente = () => {
+  const handleBuscarPaciente = (e) => {
+    e.preventDefault();
     if (stompClient) {
       stompClient.send("/app/primeirosPacientesPorEspecialistas"); // Passa o ID no endpoint
     } else {
@@ -66,11 +66,14 @@ export default function HomeMedico() {
       <Header />
 
       <form style={{maxWidth: "600px", display:"flex", flexDirection:"column"}} className="formExtra">
+       
+        
         <div id="filaTotal">
           {/* Exibindo os dados do primeiro paciente em espera */}
           <div>
-            <h3>Fila por Especialista:</h3>
+          <h3>Fila por Especialista:</h3>
             {fila && fila.length > 0 ? (
+              
               fila.map((especialista, index) => (
                 <div
                   key={index}
@@ -105,7 +108,12 @@ export default function HomeMedico() {
                 </div>
               ))
             ) : (
-              <p>Fila vazia</p>
+              
+              
+              <div style={{display:"flex", flexDirection:"column"}}>
+                <p>Click no botão para a fila aparecer.</p>
+                <button style={{width: "126px", height:'35px'}} className="butao" onClick={handleBuscarPaciente}>Mostrar Fila</button>
+              </div> 
             )}
 
           </div>
