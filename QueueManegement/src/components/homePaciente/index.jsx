@@ -1,264 +1,292 @@
-import React, { useState, useEffect } from "react";
-import iconTime from "../../assets/icon_time.png"; // Substitua pelo caminho correto da imagem do ícone de tempo
-import "./index.css"; // Certifique-se de ter o estilo adequado
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import iconTime from "../../assets/icon_time.png";
+import "./index.css";
+import { useNavigate } from "react-router-dom";
+import icon_add from "../../assets/icon_add.png";
+import Header from "../header";
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
+import Login from "../login";
 
 export default function HomePaciente() {
-  const location = useLocation(); 
-  const { senha } = location.state || {}; // Recupera a senha passada pela tela de login
-  const [pacientes, setPacientes] = useState([]); // Inicializa o estado pacientes como um array vazio
-  const [telaAtual, setTelaAtual] = useState("listaAgendamentos");
-  const [pacienteSelecionado, setPacienteSelecionado] = useState(null);
-  const [codigoInserido, setCodigoInserido] = useState("");
-  const [agendamentoConfirmado, setAgendamentoConfirmado] = useState(false);
+  const navigate = useNavigate();
 
   const [fila, setFila] = useState([
-    { id: 1, nome: "João Silva", codigo: { senha } },
-    { id: 2, nome: "Maria Santos", codigo: { senha } },
+    { id: 1, nome: "João Silva" },
+    { id: 2, nome: "Maria Santos"},
   ]);
-  const [pacienteAtual, setPacienteAtual] = useState(null);
   const [tempoRestante, setTempoRestante] = useState(90);
 
-  const hoje = new Date();
-  hoje.setHours(0, 0, 0, 0); // Ajusta a data para 00:00:00
-  const hojeFormatado = hoje.toISOString().split("T")[0]; // Formata no padrão "YYYY-MM-DD"
-  // Data atual no formato "YYYY-MM-DD"
-   // Ajustar a data para sempre mostrar o dia atual às 00:00:00
+  const [pacientes, setPacientes] = useState([]);
+  const [telaAtual, setTelaAtual] = useState("inserirCodigo");
+  const [codigoInserido, setCodigoInserido] = useState("");
+  const [pacienteSelecionado, setPacienteSelecionado] = useState(null);
+  const [agendamentoConfirmado, setAgendamentoConfirmado] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Controlar estado de carregamento
+  const [client, setClient] = useState(null); 
 
-  // UseEffect para buscar os agendamentos assim que a tela for carregada
+  const hoje1 = new Date();
+  hoje1.setHours(0, 0, 0, 0); // Ajusta a data para 00:00:00
+  const hoje = hoje1.toISOString().split("T")[0]; 
+
+  // Criação da conexão WebSocket
+  const websocketChamarPacienteConection = () => {
+    const socket = new SockJS("http://localhost:8080/fila-websocket"); // Endpoint do backend
+    const stompClientInstance = Stomp.over(socket);
+
+  stompClientInstance.connect({}, () => {
+      console.log('Conectado ao WebSocket');
+
+      // Assinao tópico de confirmação de presença
+      stompClientInstance.subscribe('/topic/presencaConfirmada', (message) => {
+        const body = JSON.parse(message.body);
+        console.log(body); // Exibe a resposta recebida no console
+      });
+    }
+  );
+
+  stompClientInstance.activate();  // Ativa a conexão WebSocket
+  setClient(stompClientInstance);  // Armazena o cliente STOMP na variável de estado
+
+  // Cleanup: desativa a conexão quando o componente for desmontado
+   // Desconectar ao desmontar o componente
+   return () => {
+    if (stompClientInstance) {
+      stompClientInstance.disconnect(() => {
+        console.log("Desconectado do WebSocket");
+      });
+    }
+  };
+}
+
+  // Recuperar estado do localStorage ao carregar
   useEffect(() => {
-    const fetchAgendamentos = async () => {
-      try {
-        const agendamentoResponse = await fetch(
-          `http://localhost:8080/fila/pegarAgendamentos?codigoCodigo=${senha}`
-        );
+    websocketChamarPacienteConection();
+    const savedCodigo = localStorage.getItem("codigoInserido");
+    const savedTela = localStorage.getItem("telaAtual");
+    const savedPaciente = localStorage.getItem("pacienteSelecionado");
 
-        let agendamentos;
-        console.log(agendamentos);
-        console.log(senha);
+    if (savedCodigo) setCodigoInserido(savedCodigo);
+    if (savedTela) setTelaAtual(savedTela);
+    if (savedPaciente) setPacienteSelecionado(JSON.parse(savedPaciente));
+  }, []);
 
-        if (!agendamentoResponse.ok) {
-          // Caso a resposta seja mal-sucedida, utiliza dados estáticos
-          console.warn("Erro ao buscar agendamentos. Utilizando dados estáticos.");
-          agendamentos = [
-            {
-              id: 1,
-              nomePaciente: "João Silva",
-              nomeEspecialista: "Rogério",
-              dataAgendamento: "2024-11-24",
-              horaAgendamento: "15:00",
-              status: "AGUARDANDO_CONFIRMACAO",
-            },
-            {
-              id: 2,
-              nomePaciente: "Maria Santos",
-              nomeEspecialista: "Ronaldo",
-              dataAgendamento: "2024-11-25",
-              horaAgendamento: "16:00",
-              status: "AGUARDANDO_CONFIRMACAO",
-            },
-          ];
-        } else {
-          agendamentos = await agendamentoResponse.json();
-          // Se o array vier vazio, substitui pelos dados estáticos
-          if (agendamentos.length === 0) {
-            agendamentos = [
-              {
-                id: 5,
-                nomePaciente: "João Silva",
-                nomeEspecialista: "Rogério",
-                dataAgendamento: "2024-11-24",
-                horaAgendamento: "15:00",
-                status: "AGUARDANDO_CONFIRMACAO",
-              },
-              {
-                id: 6,
-                nomePaciente: "Maria Santos",
-                nomeEspecialista: "Ronaldo",
-                dataAgendamento: "2024-11-25",
-                horaAgendamento: "16:00",
-                status: "AGUARDANDO_CONFIRMACAO",
-              },
-            ];
-          }
-        }
-        setPacientes(agendamentos); // Atualiza o estado de pacientes com os dados da API
-      } catch (error) {
-        console.error("Erro ao buscar agendamentos:", error);
+  // Salvar estado no localStorage sempre que mudar
+  useEffect(() => {
+    localStorage.setItem("codigoInserido", codigoInserido);
+    localStorage.setItem("telaAtual", telaAtual);
+    if (pacienteSelecionado) {
+      localStorage.setItem("pacienteSelecionado", JSON.stringify(pacienteSelecionado));
+    }
+  }, [codigoInserido, telaAtual, pacienteSelecionado]);
+
+  const fetchAgendamentos = async (codigo) => {
+    setIsLoading(true); // Começa a carregar
+    try {
+      const response = await fetch(
+        `http://localhost:8080/fila/pegarAgendamentos?codigoCodigo=${codigo}`
+      );
+      if (!response.ok) {
+        throw new Error("Código inválido.");
       }
-    };
-
-    if (senha) {
-      fetchAgendamentos();
+      const agendamentos = await response.json();
+      if (agendamentos.length === 0) {
+        alert("Nenhum agendamento aguardando para este paciente.");
+      } else {
+        setPacientes(agendamentos);
+        setTelaAtual("listaAgendamentos");
+      }
+    } catch (error) {
+      alert(error.message);
+      console.error("Erro ao buscar agendamentos:", error);
+    } finally {
+      setIsLoading(false); // Para de carregar
     }
-  }, [senha]); // O efeito será acionado quando a senha for alterada ou quando a tela for carregada
-
-  const handleConfirmar = (paciente) => {
-    if (paciente.dataAgendamento !== hojeFormatado) {
-      alert("Somente agendamentos com a data de hoje podem ser confirmados.");
-      return;
-    }
-    if (agendamentoConfirmado) {
-      alert("Você já confirmou um agendamento hoje.");
-      return;
-    }
-    setPacienteSelecionado(paciente);
-    setTelaAtual("inserirCodigo");
   };
 
   const handleCodigoSubmit = async (e) => {
-    e.preventDefault();
-    if (codigoInserido.trim() === senha) { // Validação simples de código
-      try {
-        console.log(pacienteSelecionado.id);
-        
-        // Chama o endpoint para confirmar o agendamento
-        const response = await fetch(
-          `http://localhost:8080/fila/marcarPresenca?codigoCodigo=${codigoInserido}&id_agendamento=${pacienteSelecionado.id}`,
-          { method: "PUT" }
-        );
-        
-        console.log(response);
-        
-        if (response.ok) {
-          // Atualiza o status do agendamento se confirmado com sucesso
-          setPacientes((prevPacientes) =>
-            prevPacientes.map((paciente) =>
-              paciente.id === pacienteSelecionado.id
-                ? { ...paciente, status: "EM_ESPERA"}
-                : paciente
-            )
-          );
-          alert("Agendamento confirmado com sucesso!");
-          setAgendamentoConfirmado(true);
-          setTelaAtual("filaDeEspera");
-        } else {
-          alert("Erro ao confirmar o agendamento. Tente novamente.");
-        }
-      } catch (error) {
-        alert("Erro ao tentar confirmar o agendamento.");
-        console.error("Erro ao confirmar o agendamento:", error);
-      }
-      setCodigoInserido("");
+    e.preventDefault(); // Evita recarregar a página
+    if (codigoInserido.trim()) {
+      await fetchAgendamentos(codigoInserido.trim());
     } else {
-      alert("Código inválido. Tente novamente.");
+      alert("Por favor, insira um código.");
     }
   };
+
+ 
 
   const handleAcessarFila = () => {
     setTelaAtual("filaDeEspera");
   };
 
-  useEffect(() => {
-    if (telaAtual === "filaDeEspera" && fila.length > 0) {
-      const interval = setInterval(() => {
-        setFila((prevFila) => prevFila.slice(1));
-        setTempoRestante((prevTempo) => prevTempo - 30);
-      }, 6000); // A cada 6 segundos, simula a saída de um paciente
-      return () => clearInterval(interval);
+  const handleConfirmar = async ( paciente, e) => {
+   e.preventDefault();
+
+    if (paciente.dataAgendamento !== hoje) {
+      alert("Somente agendamentos de hoje podem ser confirmados.");
+      return;
     }
-  }, [telaAtual, fila]);
 
-  const renderFilaDeEspera = () => (
-    <form style={{ padding: "20px" }}>
-      <h2>Olá, {pacienteSelecionado ? pacienteSelecionado.nomePaciente : "Paciente"}</h2>
-      <p style={{ marginBottom: "8.6%" }}>Você está na fila, aguarde sua vez</p>
+    if (agendamentoConfirmado) {
+      alert("Você já confirmou um agendamento hoje.");
+      return;
+    }
 
-      <div style={{ margin: "20px 0", background: "#a6f85e66", padding: ".4rem", borderRadius: "35px" }}>
-        <h3 style={{ display: "flex", alignItems: "center", gap: "15%", justifyContent: "flex-start" }}>
-          <img src={iconTime} alt="Ícone de relógio" style={{ marginLeft: "12px" }} />
-          <span style={{ fontSize: "24px" }}>{Math.max(0, tempoRestante)}s</span>
-          <span style={{ textAlign: "center" }}>Tempo de espera aproximado</span>
-        </h3>
+    let idAgendamento = paciente.id;
+   
+    
+    let codigoCodigo = codigoInserido;
+    const payload = {
+      codigoCodigo,
+      idAgendamento: parseInt(idAgendamento, 10)  // Garante que idAgendamento seja um número
+    };
+    console.log(payload);
+    console.log(JSON.stringify(payload));
+  
+    if (client && client.connected) {
+      try {
+        // Envia a solicitação para confirmar a presença via WebSocket
+        client.send("/app/marcarPresenca", {}, JSON.stringify(payload));
+        
+        alert("Agendamento confirmado com sucesso!");
+        setAgendamentoConfirmado(true);
+        fetchAgendamentos(codigoCodigo)
+        setPacienteSelecionado(paciente);
+      } catch (error) {
+        console.log("error");
+        
+        console.log(error);
+        
+      }
+    }
+  }
+
+  const renderInserirCodigo = () => (
+    <form id="acessarConsulta" onSubmit={handleCodigoSubmit}>
+      <div className="formButton">
+        <h2>Insira seu código</h2>
       </div>
-
-      <div>
-        <h3 style={{ textAlign: "center", marginTop: "8.6%", marginBottom: "4.6%" }}>Sua posição na fila</h3>
-        {fila.length === 0 ? (
-          <p style={{ color: "green", textAlign: "center" }}>Você está sendo chamado para atendimento!</p>
-        ) : (
-          <div>
-            <h2 style={{ color: "green", textAlign: "center" }}>{fila.length}º</h2>
-
-            <div
-              style={{
-                background: "#e0e0e0",
-                borderRadius: "10px",
-                height: "10px",
-                width: "100%",
-                margin: "10px 0",
-                marginBottom: "4.6%",
-              }}
-            >
-              <div
-                style={{
-                  width: `${(fila.length / 3) * 100}%`, // Exemplo de cálculo baseado no tamanho da fila
-                  height: "10px",
-                  background: "#a6f85e",
-                  borderRadius: "10px",
-                }}
-              ></div>
-            </div>
-          </div>
-        )}
+      <div className="field">
+        <label htmlFor="codigo">Insira o código recebido:</label>
+        <input
+          type="text"
+          id="codigoInput"
+          placeholder="Código de Atendimento"
+          value={codigoInserido}
+          onChange={(e) => setCodigoInserido(e.target.value)}
+          required
+        />
       </div>
-
-      <div className="buttons">
-        <button
-          className="butao"
-          onClick={() => setTelaAtual("listaAgendamentos")}
-          style={{ background: "red", color: "white", border: "white", cursor: "pointer" }}
-        >
-          Sair da Fila
+      <div className="formButton">
+        <button type="submit" className="butao" disabled={isLoading}>
+          {isLoading ? "Carregando..." : "Confirmar"}
         </button>
       </div>
     </form>
   );
 
   const renderListaAgendamentos = () => (
-    <div>
-      <h2>Agendamentos Feitos</h2>
-      <ul className="fila-lista">
-        {pacientes.map((paciente) => (
-          <li key={paciente.id}>
-            <div>
-              <strong>{paciente.nomePaciente}</strong> - {paciente.nomeEspecialista}
-            </div>
-            <div>{paciente.dataAgendamento} - {paciente.horaAgendamento}</div>
-            <div>Status: {paciente.status}</div>
-            {paciente.status === "AGUARDANDO_CONFIRMACAO" && (
-              <button onClick={() => handleConfirmar(paciente)}>Confirmar</button>
-            )}
-             {paciente.status === "EM_ESPERA" && (
-              <button onClick={handleAcessarFila} className="acessar-fila-btn">
-                Acessar Fila
-              </button>
-            )}
-          </li>
-        ))}
-        
-      </ul>
+    <div className="fila-container">
+      <form style={{ maxWidth: "1200px", textAlign: "center" }}>
+        {pacientes[0] && <h1>Bem-vindo, {pacientes[0].nomePaciente}!</h1>}
+        <div id="headerForm">
+          <h2>Agendamentos Feitos</h2>
+          <button>
+            <img
+              src={icon_add}
+              alt="sinal de mais"
+              title="Fazer novo agendamento"
+              onClick={() => navigate("/formsignup")}
+            />
+          </button>
+        </div>
+        <ul className="fila-lista">
+          {pacientes.map((paciente) => (
+            <li key={paciente.id} className="fila-item" style={{ display: "flex", alignItems: "center" }}>
+              <span style={{ marginLeft: "55px" }}>Médico: {paciente.nomeEspecialista}</span>
+              <span>{paciente.dataAgendamento} - {paciente.horaAgendamento}</span>
+              <span>Status: {paciente.status}</span>
+              {paciente.status === "AGUARDANDO_CONFIRMACAO" && (
+                <button type="submit" className="butao" onClick={ (e) => {handleConfirmar(paciente, e)}}>Confirmar</button>
+              )}
+              {paciente.status === "EM_ESPERA" && (
+                <button onClick={handleAcessarFila} className="butao">
+                  Acessar Fila
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      </form>
     </div>
   );
 
-  return (
-    <div className="tela">
-      {telaAtual === "listaAgendamentos" && renderListaAgendamentos()}
-      {telaAtual === "inserirCodigo" && (
-        <form onSubmit={handleCodigoSubmit}>
-          <label>
-            Insira o código de confirmação:
-            <input
-              type="text"
-              value={codigoInserido}
-              onChange={(e) => setCodigoInserido(e.target.value)}
-              required
-            />
-          </label>
-          <button type="submit">Confirmar</button>
-        </form>
+  const renderFilaDeEspera = () => 
+  (
+    <form style={{ padding: "20px", marginTop:"-6rem"}}>
+    <h2>Olá, {pacienteSelecionado ? pacienteSelecionado.nomePaciente : "Paciente"}</h2>
+    <p style={{ marginBottom: "8.6%" }}>Você está na fila, aguarde sua vez</p>
+
+    <div style={{ margin: "20px 0", background: "#a6f85e66", padding: ".4rem", borderRadius: "35px" }}>
+      <h3 style={{ display: "flex", alignItems: "center", gap: "15%", justifyContent: "flex-start" }}>
+        <img src={iconTime} alt="Ícone de relógio" style={{ marginLeft: "12px" }} />
+        <span style={{ fontSize: "24px" }}>{Math.max(0, tempoRestante)}s</span>
+        <span style={{ textAlign: "center" }}>Tempo de espera aproximado</span>
+      </h3>
+    </div>
+
+    <div>
+      <h3 style={{ textAlign: "center", marginTop: "8.6%", marginBottom: "4.6%" }}>Sua posição na fila</h3>
+      {fila.length === 0 ? (
+        <p style={{ color: "green", textAlign: "center" }}>Você está sendo chamado para atendimento!</p>
+      ) : (
+        <div>
+          <h2 style={{ color: "green", textAlign: "center" }}>{fila.length}º</h2>
+
+          <div
+            style={{
+              background: "#e0e0e0",
+              borderRadius: "10px",
+              height: "10px",
+              width: "100%",
+              margin: "10px 0",
+              marginBottom: "4.6%",
+            }}
+          >
+            <div
+              style={{
+                width: `${(2 / 3) * 100}%`, // Exemplo de cálculo baseado no tamanho da fila
+                height: "10px",
+                background: "#a6f85e",
+                borderRadius: "10px",
+              }}
+            ></div>
+          </div>
+        </div>
       )}
-      {telaAtual === "filaDeEspera" && renderFilaDeEspera()}
+    </div>
+
+    <div className="buttons">
+      <button
+        className="butao"
+        onClick={() => setTelaAtual("listaAgendamentos")}
+        style={{ background: "red", color: "white", border: "white", cursor: "pointer" }}
+      >
+        Sair da Fila
+      </button>
+    </div>
+  </form>
+  );
+
+  return (
+    <div>
+      <Header />
+      <div id="centralizaFormConsulta">
+        {telaAtual === "inserirCodigo" && renderInserirCodigo()}
+        {telaAtual === "listaAgendamentos" && renderListaAgendamentos()}
+        {telaAtual === "filaDeEspera" && renderFilaDeEspera()}
+      </div>
     </div>
   );
 }
+ 

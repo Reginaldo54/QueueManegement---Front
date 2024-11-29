@@ -214,3 +214,11 @@
       transition: .15s ease-out;
       background-color: #7cdf2568;
    }
+
+   .pacienteFila
+   {
+     border: 2px solid black;
+     border-radius: 25px;
+     background-color: #a6f85e4d;
+     padding: 2rem;
+   }

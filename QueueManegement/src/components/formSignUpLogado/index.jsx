@@ -8,14 +8,6 @@ export default function FormSignUp() {
   const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState({
-    paciente: {
-      nomeCompleto: "",
-      dataNascimento: "",
-      sexo: "",
-      cpf: "",
-      email: "",
-      telefone: "",
-    },
     dataAgendamento: "",
     horaAgendamento: "",
   });
@@ -128,7 +120,7 @@ export default function FormSignUp() {
     if (!cpfRegex.test(formValues.paciente.cpf)) {
       newErrors.cpf = "CPF inválido. Use o formato 111.222.333-44 ou 11122233344.";
     }
-    const telefoneRegex = /^(?:\(\d{2}\) \d{5}-\d{4}|\d{2} \d{5}-\d{4}|\d{2} \d{5}\d{4}|\d{11})$/;
+    const telefoneRegex = /^(?:\(\d{2}\) \d{5}-\d{4}|\d{2} \d{5}-\d{4}|\d{2} \d{5}\d{4})$/;
     if (!telefoneRegex.test(formValues.paciente.telefone)) {
       newErrors.telefone = "Telefone inválido. Use o formato (XX) XXXXX-XXXX, XX XXXXX-XXXX.";
     }

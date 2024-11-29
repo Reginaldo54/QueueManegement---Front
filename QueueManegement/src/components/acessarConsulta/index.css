@@ -1,51 +1,72 @@
-#centralizaFormConsulta
-{
-  transform: translateY(25%);
-}
 
-#acessarConsulta
-{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-}
-#acessarConsulta .field
-{
-    width: 60%; 
-}
-
-/* Estilo dos rótulos */
-#acessarConsulta .field label {
-display: block; /* Exibe o rótulo como bloco */
-margin-bottom: 5px; /* Espaço abaixo do rótulo */
-font-weight: bold; /* Rótulos em negrito */
-}
   
+  #campoEspecial
+  {
+    display: flex;
+    justify-content: space-between;
+  }
 
-#codigoInput {
-  width: 100%; /* Largura total do campo */
-  padding: 10px; /* Espaçamento interno */
-  border: 1px solid #ccc; /* Borda leve */
-  border-radius: 8px; /* Bordas arredondadas */
-  box-sizing: border-box; /* Inclui padding e borda na largura total */
-  background-color: #a6f85e36;
-  color: #505050;
-}
+  .fieldDuplo
+  {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    width: 48%;
 
-#acessarConsulta .formButton
-{
-  display: flex;
-  justify-self: left;
-}
+  }
+  /* Estilo dos campos do formulário */
+  .field {
+    margin-bottom: 15px; /* Espaçamento entre os campos */
+  }
+  
+  /* Estilo dos rótulos */
+  label {
+    display: block; /* Exibe o rótulo como bloco */
+    margin-bottom: 5px; /* Espaço abaixo do rótulo */
+    font-weight: bold; /* Rótulos em negrito */
+  }
+  
+  .formButton
+  {
+    display: flex;
+    justify-self: center;
+  }
+  
+  .butao{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #a6f85e75;
+    color: #505050;
+    border-radius: 20px;
+    width: 205px;
+    height: 44px;
+  }
 
-#acessarConsulta .formButton .butao{
-  margin-top: 15px;
-  margin-bottom: 15px;
-  background-color: #a6f85e75;
-  color: #505050;
-  border-radius: 20px;
-  width: 205px;
-  height: 44px;
-}
+  select{
+    text-align: center;
+  }
+ 
+  
+  /* Estilo dos inputs e selects */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="date"],
+  select {
+    width: 100%; /* Largura total do campo */
+    padding: 10px; /* Espaçamento interno */
+    border: 1px solid #ccc; /* Borda leve */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-sizing: border-box; /* Inclui padding e borda na largura total */
+    background-color: #a6f85e36;
+    color: #505050;
+  }
+  
+  
+  /* Estilo das mensagens de erro */
+  .error {
+    color: red; /* Cor vermelha para mensagens de erro */
+    font-size: 14px; /* Tamanho da fonte */
+    margin-top: 5px; /* Espaço acima da mensagem de erro */
+  }
+  

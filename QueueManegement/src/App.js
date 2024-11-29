@@ -14,6 +14,7 @@ import Fila from "./components/fila";
 import FilaAtendimento from "./teste/fila_atendimento";
 import HomePaciente from "./components/homePaciente";
 import FormSignUpMed from "./components/FormSignUpMed";
+import AcessarConsulta from "./components/acessarConsulta";
 
 //<Home/>
 //<TodasTelas/>
@@ -28,10 +29,11 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home/>} /> 
-        <Route path="/AcessarConsulta" element={<FilaAtendimento/>} /> 
+        <Route path="/AcessarConsulta2" element={<FilaAtendimento/>} /> 
         <Route path="/Fila" element={<Fila/>} />
         <Route path="/HomeMedico" element={<HomeMedico/>} />
-        <Route path="/HomePaciente" element={<HomePaciente/>} />
+        <Route path="/AcessarConsulta" element={<HomePaciente/>} />
+        <Route path="/AcessarConsulta1" element={<AcessarConsulta/>} />
         <Route path="/Login" element={<Login/>} />
         <Route path="/HomeAdmin" element={<UserAdmin/>} />
         <Route path="/FormSignUp" element={<FormSignUp/>} />

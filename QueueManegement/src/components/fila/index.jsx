@@ -1,3 +1,128 @@
+import React, { useState, useEffect } from "react";
+import { Stomp } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import Header from "../header"; // Supondo que você tenha um componente Header
+import "./index.css";
+
+export default function HomeMedico() {
+  const [idEspecialista, setIdEspecialista] = useState(""); // Estado para o ID do especialista
+  const [pacienteEspera, setPacienteEspera] = useState(null); // Dados do primeiro paciente em espera
+  const [pacienteAtendimento, setPacienteAtendimento] = useState(null); // Dados do primeiro paciente em atendimento
+  const [stompClient, setStompClient] = useState(null); // Cliente stomp para a conexão WebSocket
+
+  // Função para se conectar ao WebSocket
+  const websocketChamarPacienteConection = () => {
+    const socket = new SockJS("http://localhost:8080/fila-websocket"); // URL do seu servidor WebSocket
+    const stompClientInstance = Stomp.over(socket);
+
+    stompClientInstance.connect({}, () => {
+      console.log("Conectado ao WebSocket");
+
+      // Inscrever-se no tópico '/topic/primeiroPacienteAtualizado'
+      stompClientInstance.subscribe("/topic/primeiroPacienteAtualizado", (message) => {
+        if (message.body) {
+          const data = JSON.parse(message.body); // Parse da mensagem recebida
+          console.log("Paciente em espera:", data.PacienteEmEspera);
+          console.log("Paciente em atendimento:", data.PacienteEmAtendimento);
+
+          setPacienteEspera(data.PacienteEmEspera); // Atualiza o estado com paciente em espera
+          setPacienteAtendimento(data.PacienteEmAtendimento); // Atualiza o estado com paciente em atendimento
+        }
+      });
+
+      // Armazenar o cliente Stomp para envio de mensagens
+      setStompClient(stompClientInstance);
+    });
+
+    // Cleanup: desconectar ao desmontar o componente
+    return () => {
+      if (stompClientInstance) {
+        stompClientInstance.disconnect(() => {
+          console.log("Desconectado do WebSocket");
+        });
+      }
+    };
+  };
+
+  // Conectar ao WebSocket quando o componente for montado
+  useEffect(() => {
+    websocketChamarPacienteConection();
+
+    return () => {
+      if (stompClient) {
+        stompClient.disconnect();
+      }
+    };
+  }, []); // Conexão única ao montar o componente
+
+  // Função para solicitar o primeiro paciente com o ID atual do especialista
+  const handleBuscarPaciente = (e) => {
+    e.preventDefault();
+    if (stompClient && idEspecialista) {
+      stompClient.send("/app/primeiroPacienteEspecialista", {}, idEspecialista.toString()); // Passa o ID no endpoint
+      console.log(`ID do Especialista enviado: ${idEspecialista}`);
+    } else {
+      console.error("Cliente WebSocket ou ID do especialista não definido!");
+    }
+  };
+
+  return (
+    <div>
+      <Header />
+
+      <form style={{maxWidth: "800px", display:"flex", flexDirection:"column", gap: "45px"}} className="formExtra">
+        {/* Entrada e botão para definir manualmente o ID do especialista */}
+        <div style={{display: "flex", justifyContent:"center"}}>
+          <div>
+            <label htmlFor="idEspecialista">ID do Especialista:</label>
+            <input
+              id="idEspecialista"
+              type="text"
+              value={idEspecialista}
+              onChange={(e) => setIdEspecialista(e.target.value)}
+              placeholder="Digite o ID do especialista"
+            />
+              
+              <button className="butao" style={{width: "151px", height:"35px"}} onClick={(e) =>handleBuscarPaciente(e)}>Buscar Paciente</button>
+              
+          </div>
+        </div>
+        <div id="filaTotal" style={{display: "flex", justifyContent:"space-around"}}>
+          {/* Exibindo os dados do primeiro paciente em espera */}
+          <div className="pacienteFila">
+            <h3>Paciente em Espera:</h3>
+            {pacienteEspera ? (
+              <div>
+                <p><strong>Nome:</strong> {pacienteEspera.Nome}</p>
+                <p><strong>Status:</strong> {pacienteEspera.Status}</p>
+              </div>
+            ) : (
+              <p>Sem pacientes em espera</p>
+            )}
+          </div>
+
+          {/* Exibindo os dados do primeiro paciente em atendimento */}
+          <div className="pacienteFila">
+            <h3>Paciente em Atendimento:</h3>
+            {pacienteAtendimento ? (
+              <div>
+                <p><strong>Nome:</strong> {pacienteAtendimento.Nome}</p>
+                <p><strong>Status:</strong> {pacienteAtendimento.Status}</p>
+              </div>
+            ) : (
+              <p>Sem pacientes em atendimento</p>
+            )}
+          </div>
+        </div>
+       
+      </form>
+    </div>
+  );
+}
+
+
+
+/*
 import React, { useState } from "react";
 import icon_edit from "../../assets/icon_edit.png";
 import icon_add from "../../assets/icon_add.png";
@@ -95,33 +220,6 @@ const pacientesData = [
     });
   };
 
-  /*
-  const validateForm = () => {
-    const newErrors = {};
-
-    // Validação de CPF
-    const cpfRegex = /^(?:\d{3}\.\d{3}\.\d{3}-\d{2})$/;
-    if (!cpfRegex.test(pacienteSelecionado.cpf)) {
-      newErrors.cpf = "CPF inválido. Use 111.111.111-11";
-    }
-
-    // Validação de telefone
-    const telefoneRegex = /^(?:\(\d{2}\) \d{5}-\d{4}|\d{2} \d{5}-\d{4}|\d{11})$/;
-    if (!telefoneRegex.test(pacienteSelecionado.telefone)) {
-      newErrors.telefone =
-        "Telefone inválido. Use (XX) XXXXX-XXXX, XX XXXXX-XXXX ou XXXXXXXXXXX.";
-    }
-
-    // Validação de email
-    const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    if (!emailRegex.test(pacienteSelecionado.email)) {
-      newErrors.email = "Email inválido. Use um formato como exemplo@dominio.com.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-  */
   const abrirModal = (e, paciente) => {
     e.preventDefault(); // Previne o comportamento padrão
     setPacienteSelecionado(paciente);
@@ -306,4 +404,4 @@ const pacientesData = [
     </div>
   
   );
-}
+}*/

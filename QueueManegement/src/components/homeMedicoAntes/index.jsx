@@ -1,312 +1,143 @@
 import "./index.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../header";
+import axios from "axios"; // Usaremos axios para a requisição à API
+import { useLocation } from "react-router-dom";
 
 export default function HomeMedico() {
-  const nomeUser = "Dr. João Oliveira"
-  const [pacientes, setPacientes] = useState([
-    {
-      "nomeCompleto": "Maria da Silva",
-      "dataNascimento": "1990-05-15",
-      "sexo": "Feminino",
-      "cpf": "123.456.789-10",
-      "email": "maria.silva@gmail.com",
-      "telefone": "(11) 98765-4321",
-      "especialidade": "Cardiologia",
-      "medico": "Dr. João",
-      "dataConsulta": "2024-11-11",
-      "horarioConsulta": "12:00",
-      "anotacao": ""
-    },
-    {
-      "nomeCompleto": "João Oliveira",
-      "dataNascimento": "1985-09-20",
-      "sexo": "Masculino",
-      "cpf": "987.654.321-00",
-      "email": "joao.oliveira@hotmail.com",
-      "telefone": "(21) 97654-3210",
-      "especialidade": "Cardiologia",
-      "medico": "Dr. João",
-      "dataConsulta": "2024-11-11",
-      "horarioConsulta": "11:00",
-      "anotacao": ""
-    },
-    {
-      "nomeCompleto": "Ana Pereira",
-      "dataNascimento": "1978-12-05",
-      "sexo": "Feminino",
-      "cpf": "321.654.987-22",
-      "email": "ana.pereira@yahoo.com",
-      "telefone": "(31) 94567-8901",
-      "especialidade": "Cardiologia",
-      "medico": "Dr. João",
-      "dataConsulta": "2024-11-11",
-      "horarioConsulta": "10:00",
-      "anotacao": ""
-    },
-    {
-      "nomeCompleto": "Carlos Souza",
-      "dataNascimento": "1992-07-10",
-      "sexo": "Masculino",
-      "cpf": "654.321.987-33",
-      "email": "carlos.souza@gmail.com",
-      "telefone": "(41) 96543-2109",
-      "especialidade": "Cardiologia",
-      "medico": "Dr. João",
-      "dataConsulta": "2024-11-11",
-      "horarioConsulta": "09:00",
-      "anotacao": ""
-    },
-    {
-      "nomeCompleto": "Beatriz Mendes",
-      "dataNascimento": "2000-02-28",
-      "sexo": "Feminino",
-      "cpf": "789.123.456-44",
-      "email": "beatriz.mendes@outlook.com",
-      "telefone": "(51) 93456-7890",
-      "especialidade": "Cardiologia",
-      "medico": "Dr. João",
-      "dataConsulta": "2024-11-11",
-      "horarioConsulta": "08:00",
-      "anotacao": ""
-    }
-  ]);
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [formValues, setFormValues] = useState(pacientes[0]);
-  const [pacientesAtendidos, setPacientesAtendidos] = useState([]);
-  const [formVisible, setFormVisible] = useState(false);
-
- 
-    const toggleFormVisibility = (e) => {
-     // Previne o comportamento padrão do botão
-      setFormVisible((prevState) => !prevState); // Alterna a visibilidade
-      e.preventDefault(); 
-    };
-
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({ ...formValues, [name]: value });
-  };
-
-  const handleSave = () => {
-
-    // Atualiza o paciente no array original
-    setPacientes((prevPacientes) => {
-      const updatedPacientes = [...prevPacientes];
-      updatedPacientes[currentIndex] = { ...formValues };
-      return updatedPacientes;
-    });
-
-    const pacienteIndex = pacientesAtendidos.findIndex(
-      (p) => p.cpf === formValues.cpf
-    );
+  const location = useLocation();
+  const { idEspecialista } = location.state || {}; 
+  const nomeUser = "Dr. João Oliveira"; // Nome do médico logado
+  const [pacientes, setPacientes] = useState([]); // Lista de pacientes
+  const [pacientesAtendidos, setPacientesAtendidos] = useState([]); // Lista de pacientes atendidos
+  const [formValues, setFormValues] = useState({}); // Dados do paciente no formulário
+  const [formVisible, setFormVisible] = useState(false); // Controle de visibilidade do formulário
+  const [totalPacientes, setTotalPacientes] = useState(0); // Total de pacientes
   
-    if (pacienteIndex !== -1) {
-      const updatedPacientes = [...pacientesAtendidos];
-      updatedPacientes[pacienteIndex] = { ...formValues };
-      setPacientesAtendidos(updatedPacientes);
-    } else {
-      setPacientesAtendidos([...pacientesAtendidos, formValues]);
-    }
-    
-   // alert("Paciente atualizado e salvo no array de pacientes atendidos!");
-  };
-
-  const handlePrevious = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex((prevIndex) => prevIndex - 1);
-      setFormValues(pacientes[currentIndex - 1]);
+  // Função para obter o total de pacientes
+  const getTotalPacientes = async () => {
+    try {
+      console.log(idEspecialista);
+      
+      const response = await axios.get(`http://localhost:8080/fila/contagemEspecialista/${idEspecialista}`);
+      setTotalPacientes(response.data.QuantidadePacientesEmEspera); // Atualizando o total de pacientes
+    } catch (error) {
+      console.error("Erro ao buscar o total de pacientes:", error);
     }
   };
 
-  const handleNext = () => {
-    if (currentIndex < pacientes.length - 1) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
-      setFormValues(pacientes[currentIndex + 1]);
-      handleSave();
+  // Função para chamar um paciente
+  const chamarPaciente = async () => {
+    try {
+      const response = await axios.put(`http://localhost:8080/fila/chamarPaciente?idEspecialista=${idEspecialista}`);
+      if (response.data) {
+        const paciente = response.data;
+        alert(`Paciente chamado: ${paciente.nome}`);
+        setFormValues(paciente); // Atualiza os valores do formulário com os dados do paciente
+        setPacientes((prev) => [...prev, paciente]); // Adiciona o paciente à lista
+        setFormVisible(true); // Exibe o formulário
+        
+        setTotalPacientes((prevTotal) => prevTotal - 1);
+      }
+    } catch (error) {
+      console.error("Erro ao chamar paciente:", error);
     }
   };
+
+  // Função para salvar as anotações do paciente
+  const handleSave = async () => {
+    try {
+     let response =  await axios.put(`http://localhost:8080/fila/adicionarObservacaoProntuario?pacienteId=${formValues.id}&novaObservacao=${formValues.anotacao}`);
+
+      console.log(response);
+      
+
+      setPacientesAtendidos((prevAtendidos) => [...prevAtendidos, formValues]); // Adiciona aos pacientes atendidos
+       // Reduz o total de pacientes
+
+      if (totalPacientes >= 1) {
+        chamarPaciente(); // Chama o próximo paciente automaticamente
+      } else {
+        setFormVisible(false); // Esconde o formulário se não houver mais pacientes
+      }
+    } catch (error) {
+      console.error("Erro ao salvar a observação:", error);
+    }
+  };
+
+  // Inicializa os dados ao montar o componente
+  useEffect(() => {
+    getTotalPacientes();
+  }, []);
 
   return (
     <div>
       <Header />
 
-
-     
       <form className="formExtra">
         <div>
-              <h2>Olá, {nomeUser}</h2>
-              <h3 id="totalPacientes">
-                <span> Total de Pacientes:</span> <span>{pacientes.length - pacientesAtendidos.length}</span>
-              </h3>
-              {!formVisible && (
-              <button onClick={toggleFormVisibility} className="butao atendimento"  disabled={pacientes.length - pacientesAtendidos.length === 0 }>
-                 Iniciar Atendimento
-              </button>
-              )}
+          <h2>Olá, {nomeUser}</h2>
+          <h3 id="totalPacientes">
+            <span>Total de Pacientes:</span>{" "}
+            <span>{totalPacientes}</span>
+          </h3>
+          {!formVisible && totalPacientes > 0 && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                chamarPaciente();
+              }}
+              className="butao atendimento"
+            >
+              Iniciar Atendimento
+            </button>
+          )}
         </div>
       </form>
+
       {formVisible && (
-      <form>
-        <h2>Paciente Atual</h2>
-        <div className="field">
-          <label>Nome Completo:</label>
-          <input
-            type="text"
-            name="nomeCompleto"
-            value={formValues.nomeCompleto}
-            onChange={handleChange}
-            readOnly
-          />
-        </div>
-        <div id="campoEspecial">
-          <div className="fieldDuplo">
-            <div className="field">
-              <label>Data de Nascimento:</label>
-              <input
-                type="date"
-                name="dataNascimento"
-                value={formValues.dataNascimento}
-                onChange={handleChange}
-                readOnly
-              />
-            </div>
-
-            <div className="field">
-              <label>Telefone:</label>
-              <input
-                type="tel"
-                name="telefone"
-                value={formValues.telefone}
-                onChange={handleChange}
-                readOnly
-              />
-            </div>
-          </div>
-
-          <div className="fieldDuplo">
-            <div className="field">
-              <label>Sexo:</label>
-              <input
-                name="sexo"
-                type="text"
-                value={formValues.sexo}
-                onChange={handleChange}
-                readOnly
-                
-              >
-              </input>
-               
-            </div>
-            <div className="field">
-              <label>CPF:</label>
-              <input
-                type="text"
-                name="cpf"
-                value={formValues.cpf}
-                onChange={handleChange}
-                readOnly
-              />
-            </div>
-          </div>
-        </div>
-        <div className="field">
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formValues.email}
-            onChange={handleChange}
-            readOnly
-          />
-        </div>
-
-        <div className="field">
-          <label>Especialidade:</label>
-          <input
-            type="text"
-            name="especialidade"
-            value={formValues.especialidade}
-            onChange={handleChange}
-            readOnly
-          />
-        </div>
-
-        <div className="field">
-          <label>Médico:</label>
-          <input
-            type="text"
-            name="medico"
-            value={formValues.medico}
-            onChange={handleChange}
-            readOnly
-          />
-        </div>
-
-        <div className="fieldDuploSimples">
+        <form>
+          <h2>Paciente Atual</h2>
           <div className="field">
-            <label>Data da Consulta:</label>
+            <label>Nome Completo:</label>
             <input
-              type="date"
-              name="dataConsulta"
-              value={formValues.dataConsulta}
-              onChange={handleChange}
+              type="text"
+              name="nome"
+              value={formValues.nome || ""}
               readOnly
             />
           </div>
-
           <div className="field">
-            <label>Horário da Consulta:</label>
+            <label>Sexo:</label>
             <input
-              type="time"
-              name="horarioConsulta"
-              value={formValues.horarioConsulta}
-              onChange={handleChange}
+              name="sexo"
+              type="text"
+              value={formValues.sexo || ""}
               readOnly
             />
           </div>
-        </div>
-
-        <div className="field">
-          <label>Anotação:</label>
-          <textarea
-            name="anotacao"
-            value={formValues.anotacao}
-            onChange={handleChange}
-            placeholder="Esse paciente precisa disso e aquilo"
-          />
-        </div>
-
-        <div className="buttons">
-          <button
-            type="button"
-            onClick={handlePrevious}
-            disabled={currentIndex === 0}
-            className="butao"
-          >
-            Anterior
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              if (currentIndex < pacientes.length - 1) {
-                handleNext();
-              } else {
-                setFormVisible(false); // Esconde o formulário
-              //  setCurrentIndex(0); // Opcional: Reinicia para o primeiro paciente
-                handleSave();
+          <div className="field">
+            <label>Anotação:</label>
+            <textarea
+              name="anotacao"
+              value={formValues.anotacao || ""}
+              onChange={(e) =>
+                setFormValues({ ...formValues, anotacao: e.target.value })
               }
-            }}
-            
-            className="butao"
-          >
-             {currentIndex < pacientes.length - 1 ? "Próximo" : "Finalizar Atendimento"}
-          </button>
-
-        </div>
-      </form>)}
+              placeholder="Adicione as observações do paciente"
+            />
+          </div>
+          <div className="buttons">
+            <button
+              type="button"
+              onClick={handleSave}
+              className="butao"
+            >
+              Salvar e Chamar Próximo
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
