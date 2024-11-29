@@ -6,7 +6,8 @@ import "./index.css";
 
 export default function HomeMedico() {
   const [idEspecialista, setIdEspecialista] = useState(""); // Estado para o ID do especialista
-  const [fila, setfila] = useState([]); // Dados do primeiro paciente em espera // Dados do primeiro paciente em atendimento
+  const [pacienteEspera, setPacienteEspera] = useState(null); // Dados do primeiro paciente em espera
+  const [pacienteAtendimento, setPacienteAtendimento] = useState(null); // Dados do primeiro paciente em atendimento
   const [stompClient, setStompClient] = useState(null); // Cliente stomp para a conexão WebSocket
 
   // Função para se conectar ao WebSocket
@@ -18,12 +19,14 @@ export default function HomeMedico() {
       console.log("Conectado ao WebSocket");
 
       // Inscrever-se no tópico '/topic/primeiroPacienteAtualizado'
-      stompClientInstance.subscribe("/topic/primeirosPacientesPorEspecialistaAtualizados", (message) => {
+      stompClientInstance.subscribe("/topic/primeiroPacienteAtualizado", (message) => {
         if (message.body) {
           const data = JSON.parse(message.body); // Parse da mensagem recebida
-          console.log(data);
-          
-          setfila(data);
+          console.log("Paciente em espera:", data.PacienteEmEspera);
+          console.log("Paciente em atendimento:", data.PacienteEmAtendimento);
+
+          setPacienteEspera(data.PacienteEmEspera); // Atualiza o estado com paciente em espera
+          setPacienteAtendimento(data.PacienteEmAtendimento); // Atualiza o estado com paciente em atendimento
         }
       });
 
@@ -44,7 +47,7 @@ export default function HomeMedico() {
   // Conectar ao WebSocket quando o componente for montado
   useEffect(() => {
     websocketChamarPacienteConection();
-    handleBuscarPaciente();
+
     return () => {
       if (stompClient) {
         stompClient.disconnect();
@@ -53,9 +56,11 @@ export default function HomeMedico() {
   }, []); // Conexão única ao montar o componente
 
   // Função para solicitar o primeiro paciente com o ID atual do especialista
-  const handleBuscarPaciente = () => {
-    if (stompClient) {
-      stompClient.send("/app/primeirosPacientesPorEspecialistas"); // Passa o ID no endpoint
+  const handleBuscarPaciente = (e) => {
+    e.preventDefault();
+    if (stompClient && idEspecialista) {
+      stompClient.send("/app/primeiroPacienteEspecialista", {}, idEspecialista.toString()); // Passa o ID no endpoint
+      console.log(`ID do Especialista enviado: ${idEspecialista}`);
     } else {
       console.error("Cliente WebSocket ou ID do especialista não definido!");
     }
@@ -65,49 +70,48 @@ export default function HomeMedico() {
     <div>
       <Header />
 
-      <form style={{maxWidth: "600px", display:"flex", flexDirection:"column"}} className="formExtra">
-        <div id="filaTotal">
-          {/* Exibindo os dados do primeiro paciente em espera */}
+      <form style={{maxWidth: "800px", display:"flex", flexDirection:"column", gap: "45px"}} className="formExtra">
+        {/* Entrada e botão para definir manualmente o ID do especialista */}
+        <div style={{display: "flex", justifyContent:"center"}}>
           <div>
-            <h3>Fila por Especialista:</h3>
-            {fila && fila.length > 0 ? (
-              fila.map((especialista, index) => (
-                <div
-                  key={index}
-                  style={{ marginBottom: "20px", border: "2px solid black", borderRadius:"25px",background:"#a6f85e4d", padding: "10px" }}
-                >
-                  <h3>{especialista.TipoEspecialista}</h3>
-                  <p><strong>Nome:</strong> {especialista.Nome}</p>
-                  <p><strong>ID do Especialista:</strong> {especialista.EspecialistaId}</p>
-                  <h4>Fila:</h4>
-                  <div style={{display: 'flex', justifyContent:'space-around'}}>
-                    
-                    {especialista.Pacientes.PacienteEmEspera ? (
-                      <div>
-                        <p><strong>Em Espera:</strong></p>
-                        <p><strong>Nome:</strong> {especialista.Pacientes.PacienteEmEspera.Nome}</p>
-                        <p><strong>Status:</strong> {especialista.Pacientes.PacienteEmEspera.Status}</p>
-                      </div>
-                    ) : (
-                      <p>Sem pacientes em espera</p>
-                    )}
-
-                    {especialista.Pacientes.PacienteEmAtendimento ? (
-                      <div>
-                        <p><strong>Em Atendimento:</strong></p>
-                        <p><strong>Nome:</strong> {especialista.Pacientes.PacienteEmAtendimento.Nome}</p>
-                        <p><strong>Status:</strong> {especialista.Pacientes.PacienteEmAtendimento.Status}</p>
-                      </div>
-                    ) : (
-                      <p>Sem pacientes em atendimento</p>
-                    )}
-                  </div>
-                </div>
-              ))
+            <label htmlFor="idEspecialista">ID do Especialista:</label>
+            <input
+              id="idEspecialista"
+              type="text"
+              value={idEspecialista}
+              onChange={(e) => setIdEspecialista(e.target.value)}
+              placeholder="Digite o ID do especialista"
+            />
+              
+              <button className="butao" style={{width: "151px", height:"35px"}} onClick={(e) =>handleBuscarPaciente(e)}>Buscar Paciente</button>
+              
+          </div>
+        </div>
+        <div id="filaTotal" style={{display: "flex", justifyContent:"space-around"}}>
+          {/* Exibindo os dados do primeiro paciente em espera */}
+          <div className="pacienteFila">
+            <h3>Paciente em Espera:</h3>
+            {pacienteEspera ? (
+              <div>
+                <p><strong>Nome:</strong> {pacienteEspera.Nome}</p>
+                <p><strong>Status:</strong> {pacienteEspera.Status}</p>
+              </div>
             ) : (
-              <p>Fila vazia</p>
+              <p>Sem pacientes em espera</p>
             )}
+          </div>
 
+          {/* Exibindo os dados do primeiro paciente em atendimento */}
+          <div className="pacienteFila">
+            <h3>Paciente em Atendimento:</h3>
+            {pacienteAtendimento ? (
+              <div>
+                <p><strong>Nome:</strong> {pacienteAtendimento.Nome}</p>
+                <p><strong>Status:</strong> {pacienteAtendimento.Status}</p>
+              </div>
+            ) : (
+              <p>Sem pacientes em atendimento</p>
+            )}
           </div>
         </div>
        

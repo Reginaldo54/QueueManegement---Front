@@ -26,12 +26,6 @@ export default function UserAdmin() {
                     <div id="butoes">
                         <button
                             className="butao"
-                            onClick={() => navigate("/FormSignUpFunc")}
-                        >
-                            Cadastrar Funcionário
-                        </button>
-                        <button
-                            className="butao"
                             onClick={() => navigate("/FormSignUpMed")}
                         >
                             Cadastrar Médico
