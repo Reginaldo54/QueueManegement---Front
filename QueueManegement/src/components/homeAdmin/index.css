@@ -1,5 +1,5 @@
 
-#homeContainer
+#adminContainer
 {
     display: flex;
     justify-content: center;
@@ -8,12 +8,12 @@
     
 }
 
-#homeContainer h2
+#adminContainer h2
 {
     margin-bottom: 45px;
 }
 
-#homeContainer #butoes
+#adminContainer #butoes
 {
     display: flex;
     justify-content: center;
@@ -23,20 +23,19 @@
     margin-top: -10px;
 }
 
-#homeContainer #butoes .butao{
+#adminContainer #butoes .butao{
     background-color: #a6f85e75;
     color: #505050;
     border-radius: 20px;
-    width: 184px;
+    width: 185px;
 }
 
-#homeContainer #butoes .butao:hover
+#adminContainer #butoes .butao:hover
 {
     background-color: #a6f85ecb;
 
 }
-
-#centralizaFormHome
+#centralizaFormAdmin
 {
   transform: translateY(15%);
 }

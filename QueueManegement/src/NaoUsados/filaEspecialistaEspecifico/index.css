@@ -1,5 +1,5 @@
 
-
+  
   #campoEspecial
   {
     display: flex;
@@ -56,7 +56,7 @@
     background-color: #a6f85e75;
     color: #505050;
     border-radius: 20px;
-    width: 184px;
+    width: 134px;
     height: 44px;
     font-size: 16px;
     transition: .2s ease-in;
@@ -172,7 +172,14 @@
   }
   
    /* Estilo dos inputs e selects */
-   input[type="text"]{
+   input[type="text"],
+   input[type="email"],
+   input[type="password"],
+   input[type="tel"],
+   input[type="date"],
+   input[type="time"],
+   textarea,
+   select {
      width: 100%; /* Largura total do campo */
      padding: 10px; /* Espaçamento interno */
      border: 1px solid #ccc; /* Borda leve */
@@ -206,4 +213,12 @@
    {
       transition: .15s ease-out;
       background-color: #7cdf2568;
+   }
+
+   .pacienteFila
+   {
+     border: 2px solid black;
+     border-radius: 25px;
+     background-color: #a6f85e4d;
+     padding: 2rem;
    }

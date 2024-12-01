@@ -99,7 +99,7 @@ export default function FormSignUpMed() {
   return (
     <div>
       <Header />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} id="cadastroMedico">
         <div className="formButton">
           <h2>Cadastro do Médico</h2>
         </div>

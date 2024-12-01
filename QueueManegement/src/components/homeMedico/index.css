@@ -1,5 +1,5 @@
 /* Define a fonte padrão e as cores principais */
-body {
+#homeMedico body {
     font-family: Arial, sans-serif; /* Fonte simples e legível */
     background-color: #5ef8e628; /* Fundo claro para um visual clean */
     color: #333; /* Cor de texto escura para melhor legibilidade */
@@ -10,7 +10,7 @@ body {
   }
   
   /* Estilo do formulário */
-  form {
+  #homeMedico form {
     background-color: #ffffff; /* Fundo branco para o formulário */
     border-radius: 8px; /* Bordas arredondadas */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
@@ -19,13 +19,13 @@ body {
     margin: auto; /* Centraliza o formulário na página */
   }
   
-  #campoEspecial
+  #homeMedico #campoEspecial
   {
     display: flex;
     justify-content: space-between;
   }
 
-  .fieldDuplo
+  #homeMedico .fieldDuplo
   {
     display: flex;
     justify-content: left;
@@ -33,74 +33,76 @@ body {
     width: 48%;
 
   }
-  .fieldDuploSimples
+
+  #homeMedico .fieldDuploSimples
   {
     display: flex;
     justify-content: space-between;
     
   }
-  .formExtra
+
+  #homeMedico .formExtra
   {
     margin-bottom: 15px;
     display: flex;
     justify-content: center;
   }
 
-  .formExtra #totalPacientes
+  #homeMedico .formExtra #totalPacientes
   {
     display: flex;
     justify-content: space-between;
   }
 
-  .fieldDuploSimples .field
+  #homeMedico .fieldDuploSimples .field
   {
     width: 48%;
   }
 
   /* Estilo dos campos do formulário */
-  .field {
+  #homeMedico .field {
     margin-bottom: 15px; /* Espaçamento entre os campos */
   }
   
   /* Estilo dos rótulos */
-  label {
+  #homeMedico label {
     display: block; /* Exibe o rótulo como bloco */
     margin-bottom: 5px; /* Espaço abaixo do rótulo */
     font-weight: bold; /* Rótulos em negrito */
   }
 
   
-  .butao{
+  #homeMedico .butao{
     margin-top: 15px;
     background-color: #a6f85e75;
     color: #505050;
     border-radius: 20px;
-    width: 134px;
+    width: 214px;
     height: 44px;
     font-size: 16px;
     transition: .2s ease-in;
     
   }
 
-  .butao:hover
+  #homeMedico .butao:hover
   {
     transition: .13s ease-out;
     background-color: #97e15675;
   }
 
-  .butao:disabled
+  #homeMedico .butao:disabled
   {
     transition: .4s ease-in;
     background-color: #a6f85e3a;;
   }
 
-  .atendimento
+  #homeMedico .atendimento
   {
     margin-left: 21%;
     margin-top: 15px;
   }
 
-  .buttons
+  #homeMedico .buttons
   {
     display: flex;
     justify-content: center;
@@ -108,13 +110,13 @@ body {
     margin-bottom: 15px;
   }
 
-  select{
+  #homeMedico select{
     text-align: center;
   }
  
   
   /* Estilo dos inputs e selects */
-  input[type="text"],
+  #homeMedico input[type="text"],
   input[type="email"],
   input[type="password"],
   input[type="tel"],
@@ -131,12 +133,12 @@ body {
     color: #505050;
   }
   
-  textarea {
+  #homeMedico textarea {
     height: 111px;
   }
   
   /* Estilo das mensagens de erro */
-  .error {
+  #homeMedico .error {
     color: red; /* Cor vermelha para mensagens de erro */
     font-size: 14px; /* Tamanho da fonte */
     margin-top: 5px; /* Espaço acima da mensagem de erro */

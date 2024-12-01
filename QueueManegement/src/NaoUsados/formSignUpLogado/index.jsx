@@ -1,21 +1,13 @@
 import "./index.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "../header";
+import Header from "../../components/header";
 import { useNavigate } from "react-router-dom";
 
 export default function FormSignUp() {
   const navigate = useNavigate();
 
   const [formValues, setFormValues] = useState({
-    paciente: {
-      nomeCompleto: "",
-      dataNascimento: "",
-      sexo: "",
-      cpf: "",
-      email: "",
-      telefone: "",
-    },
     dataAgendamento: "",
     horaAgendamento: "",
   });
@@ -128,7 +120,7 @@ export default function FormSignUp() {
     if (!cpfRegex.test(formValues.paciente.cpf)) {
       newErrors.cpf = "CPF inválido. Use o formato 111.222.333-44 ou 11122233344.";
     }
-    const telefoneRegex = /^(?:\(\d{2}\) \d{5}-\d{4}|\d{2} \d{5}-\d{4}|\d{2} \d{5}\d{4}|\d{11})$/;
+    const telefoneRegex = /^(?:\(\d{2}\) \d{5}-\d{4}|\d{2} \d{5}-\d{4}|\d{2} \d{5}\d{4})$/;
     if (!telefoneRegex.test(formValues.paciente.telefone)) {
       newErrors.telefone = "Telefone inválido. Use o formato (XX) XXXXX-XXXX, XX XXXXX-XXXX.";
     }
@@ -165,7 +157,7 @@ export default function FormSignUp() {
         console.log(payload);
         
         
-        navigate("/acessarConsulta");
+        navigate("/Login");
       } catch (error) {
         console.error("Erro ao agendar consulta", error);
         alert("Erro ao agendar consulta.");
@@ -176,7 +168,7 @@ export default function FormSignUp() {
   return (
     <div className="form-container">
       <Header />
-      <form onSubmit={handleSubmit} id="cadastroPaciente" style={{marginTop:"65px"}}>
+      <form onSubmit={handleSubmit}>
         {/* Campos de Paciente */}
         <div id="campos">
           <div className="field">

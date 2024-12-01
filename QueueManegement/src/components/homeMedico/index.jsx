@@ -4,6 +4,7 @@ import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import Header from "../header";
 import { useLocation } from "react-router-dom";
+import "./index.css";
 
 export default function HomeMedico() {
   const location = useLocation();
@@ -33,8 +34,6 @@ export default function HomeMedico() {
 
       // Inscrever-se no tópico para receber mensagens de pacientes chamados
       stompClientInstance.subscribe("/topic/pacienteChamado", (message) => {
-        console.log(message);
-        
         if (message.body) {
           const data = JSON.parse(message.body); // Mensagem recebida do backend
           console.log(data);
@@ -82,8 +81,6 @@ export default function HomeMedico() {
     try {
       let response = await axios.put(`http://localhost:8080/fila/adicionarObservacaoProntuario?pacienteId=${formValues.id}&novaObservacao=${formValues.anotacao}`);
 
-      console.log(response);
-
       setPacientesAtendidos((prevAtendidos) => [...prevAtendidos, formValues]); // Adiciona aos pacientes atendidos
       // Reduz o total de pacientes
       if (totalPacientes >= 1) {
@@ -111,7 +108,7 @@ export default function HomeMedico() {
     <div>
       <Header />
 
-      <form className="formExtra">
+      <form className="formExtra" id="homeMedico">
         <div>
           <h2>Olá, {nomeUser}</h2>
           <h3 id="totalPacientes">
@@ -165,25 +162,28 @@ export default function HomeMedico() {
               readOnly
             />
           </div>
-          <div className="field">
-          <label>Data de Chegada:</label>
-          <input
-            name="dataChegada"
-            type="text"
-            value={formValues.horaChegada ? formValues.horaChegada.split("T")[0] : ""}
-            readOnly
-          />
-        </div>
-        <div className="field">
-          <label>Hora de Chegada:</label>
-          <input
-            name="horaChegada"
-            type="text"
-            value={formValues.horaChegada ? formValues.horaChegada.split("T")[1].split(".")[0] : ""}
-            readOnly
-          />
-        </div>
-
+          { formValues.horaChegada && (
+            <div>
+              <div className="field">
+                <label>Data de Chegada:</label>
+                <input
+                  name="dataChegada"
+                  type="text"
+                  value={formValues.horaChegada ? formValues.horaChegada.split("T")[0] : ""}
+                  readOnly
+                />
+              </div>
+              <div className="field">
+                <label>Hora de Chegada:</label>
+                <input
+                  name="horaChegada"
+                  type="text"
+                  value={formValues.horaChegada ? formValues.horaChegada.split("T")[1].split(".")[0] : ""}
+                  readOnly
+                />
+              </div>
+            </div>
+           )}
 
           <div className="field">
             <label>Anotação:</label>

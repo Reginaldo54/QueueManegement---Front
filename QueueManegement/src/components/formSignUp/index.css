@@ -19,13 +19,13 @@ body {
     margin: auto; /* Centraliza o formulário na página */
   }
   
-  #campoEspecial
+  #cadastroPaciente #campoEspecial
   {
     display: flex;
     justify-content: space-between;
   }
 
-  .fieldDuplo
+  #cadastroPaciente .fieldDuplo
   {
     display: flex;
     justify-content: left;
@@ -34,24 +34,24 @@ body {
 
   }
   /* Estilo dos campos do formulário */
-  .field {
+  #cadastroPaciente .field {
     margin-bottom: 15px; /* Espaçamento entre os campos */
   }
   
   /* Estilo dos rótulos */
-  label {
+  #cadastroPaciente label {
     display: block; /* Exibe o rótulo como bloco */
     margin-bottom: 5px; /* Espaço abaixo do rótulo */
     font-weight: bold; /* Rótulos em negrito */
   }
   
-  .formButton
+  #cadastroPaciente .formButton
   {
     display: flex;
     justify-self: center;
   }
   
-  .butao{
+  #cadastroPaciente .butao{
     margin-top: 15px;
     margin-bottom: 15px;
     background-color: #a6f85e75;
@@ -63,19 +63,19 @@ body {
     transition: .2s ease-in;
   }
 
-  .butao:hover
+  #cadastroPaciente .butao:hover
   {
       background-color: #a6f85ecb;
       transition: .2s ease-out;
   }
 
-  select{
+  #cadastroPaciente select{
     text-align: center;
   }
  
   
   /* Estilo dos inputs e selects */
-  input[type="text"],
+  #cadastroPaciente input[type="text"],
   input[type="email"],
   input[type="password"],
   input[type="tel"],

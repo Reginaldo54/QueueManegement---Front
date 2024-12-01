@@ -29,30 +29,25 @@ export default function Login() {
             }
 
             const data = await response.json();
+            console.log(data);
             
             
 
             // Verifica se a resposta contém a role
-            if (data.role) {
+            if (data) {
+        
                 // Dependendo da role retornada, redireciona para a página apropriada
-                if (data.role === "ADMIN") {
-                  //  navigate("/homeadmin");
+                if (data === "ADMIN") {
+                  navigate("/homeadmin");
                   console.log("Deu certo: " + JSON.stringify(data));
-                } else if (data.role === "FUNCIONARIO") {
-                    navigate("/homefuncionario");
                 } else if (data.role === "ESPECIALISTA") {
                     // Se for especialista, pode redirecionar para a página do especialista
                    // navigate(`/homemedico/${data.idEspecialista}`);
                    let idEspecialista = data.idEspecialista;
                    navigate("/homeMedico", { state: {idEspecialista} });
+                
                 }if (data.role === "PACIENTE") {
-                    // Se for especialista, pode redirecionar para a página do especialista
-                    //navigate(`/${data.idEspecialista}`);
-                    
-                    console.log("Deu certo: " + JSON.stringify(data));
-                    
-                        // Navega para a homePaciente passando a senha no estado
-                        navigate("/homePaciente", { state: { senha } });
+                   alert("O Login é apenas para Médicos e o Admim");
                 }
             } else {
                 // Se a role não for encontrada, mostramos um alerta com o erro

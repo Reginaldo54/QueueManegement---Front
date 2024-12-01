@@ -1,11 +1,12 @@
 
-  #cadastroMedico #campoEspecial
+  
+  #campoEspecial
   {
     display: flex;
     justify-content: space-between;
   }
 
-  #cadastroMedico .fieldDuplo
+  .fieldDuplo
   {
     display: flex;
     justify-content: left;
@@ -14,24 +15,24 @@
 
   }
   /* Estilo dos campos do formulário */
-  #cadastroMedico .field {
+  .field {
     margin-bottom: 15px; /* Espaçamento entre os campos */
   }
   
   /* Estilo dos rótulos */
-  #cadastroMedico label {
+  label {
     display: block; /* Exibe o rótulo como bloco */
     margin-bottom: 5px; /* Espaço abaixo do rótulo */
     font-weight: bold; /* Rótulos em negrito */
   }
   
-  #cadastroMedico .formButton
+  .formButton
   {
     display: flex;
     justify-self: center;
   }
   
-  #cadastroMedico .butao{
+  .butao{
     margin-top: 15px;
     margin-bottom: 15px;
     background-color: #a6f85e75;
@@ -41,13 +42,13 @@
     height: 44px;
   }
 
-  #cadastroMedico select{
+  select{
     text-align: center;
   }
  
   
   /* Estilo dos inputs e selects */
-  #cadastroMedico input[type="text"],
+  input[type="text"],
   input[type="email"],
   input[type="tel"],
   input[type="date"],
@@ -63,19 +64,9 @@
   
   
   /* Estilo das mensagens de erro */
-  #cadastroMedico .error {
+  .error {
     color: red; /* Cor vermelha para mensagens de erro */
     font-size: 14px; /* Tamanho da fonte */
     margin-top: 5px; /* Espaço acima da mensagem de erro */
   }
   
-  #cadastroMedico .formButton h2
-{
-  margin-bottom: 35px;
-}
-
-#cadastroMedico .formButton .butao
-{
-  margin-top: 35px;
-  margin-bottom: 35px;
-}

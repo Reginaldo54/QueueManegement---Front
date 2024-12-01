@@ -26,9 +26,9 @@ export default function Home()
                     <div id="homeContainer">
                         <h2>O que Deseja?</h2>
                         <div id="butoes">
-                            <button className="butao" style={{width:""}} onClick={() => navigate("/FormSignUp")}>Agendamento</button>
-                            <button className="butao" onClick={() => navigate("/AcessarConsulta")}>Acessar Consulta</button>
-                            <button className="butao" onClick={() => navigate("/Login")}>Login</button>
+                            <button className="butao"  title = "Para Paciente" style={{width:""}} onClick={() => navigate("/FormSignUp")}>Fazer Consulta</button>
+                            <button className="butao"  title = "Para Pacientes" onClick={() => navigate("/AcessarConsulta")}>Acessar Consulta</button>
+                            <button className="butao" title="Para admin e médicos" onClick={() => navigate("/Login")}>Login</button>
                         </div>
                     </div>
                 </form>
