@@ -1,0 +1,31 @@
+#header
+{
+    background-color: #DBFCBF;
+    
+    width: 100vw;
+    
+    margin-left: -20px;
+    margin-top: -20px;
+    margin-bottom: 15px;
+
+    display: flex;
+    justify-content: center;
+
+    border-radius: 5px 5px 25px 25px;
+}
+
+#header button
+{
+    display: flex;
+    background-color: #dbfcbf00;
+    border: #dbfcbf00;
+    transition: .3s ease-in;
+    border-radius: 55px;
+}
+
+#header button:hover
+{
+    transition: .2s ease-out;
+    cursor: pointer;
+    background-color: #b8ff7baf;
+}
